@@ -4,13 +4,10 @@
 #include<iostream>
 #include<iomanip>
 #include<complex>
-namespace Bigint{
-	const size_t MAX_SIZE=1000000;
-	char temp[MAX_SIZE+1];
+namespace FFT{
 	// Fast Fourier Transform
 	using cp=std::complex<double>;
 	constexpr double pi=acos(-1),pi2=2*acos(-1),pi6=6*acos(-1);
-	using ll=long long;
 	template<const int n>
 	void dif(cp a[]){
 		constexpr int half=n/2,quarter=n/4;
@@ -124,10 +121,12 @@ namespace Bigint{
 			case 1<<21:dit<1<<21>(a);break;
 		}
 	}
+}
+namespace Bigint{
 	class ulllint{
 		friend std::istream;
 		friend std::ostream;
-		using ll=long long;
+		using ll=short int;
 		using size_t=unsigned int;
 		static constexpr size_t len=4;
 		static constexpr size_t base=10000;
@@ -159,24 +158,26 @@ namespace Bigint{
 			nums=x.nums;
 			return *this;
 		}
+		static constexpr size_t MAX_SIZE=1000000;
 		friend std::istream& operator>>(std::istream& cin,ulllint& x);
 		friend std::ostream& operator<<(std::ostream& cout,const ulllint& x);
 		friend ulllint operator+(const ulllint& x,const ulllint& y);
 		friend ulllint operator-(const ulllint& x,const ulllint& y);
 		friend ulllint operator*(const ulllint& x,const ulllint& y);
 	};
+	char temp[ulllint::MAX_SIZE+1];
 	// input and output,use iostream
 	std::istream& operator>>(std::istream& cin,ulllint& x){
 		std::cin>>temp;
 		const size_t l=strlen(temp);
 		size_t j=-1,w=1;
-		x.nums=std::vector<long long>(l/ulllint::len+2,0);
+		x.nums=std::vector<ulllint::ll>(l/ulllint::len+2,0);
 		for(size_t i=0;i<l;i++){
 			if(!(i%ulllint::len))j++,w=1;
 			x[j]+=(temp[l-i-1]^'0')*w;
 			w*=10;
 		}
-		while(x.size()&&x[x.size()-1]==0)x.nums.pop_back();
+		while(x.size()>1&&x[x.size()-1]==0)x.nums.pop_back();
 		return cin;
 	}
 	std::ostream& operator<<(std::ostream& cout,const ulllint& x){
@@ -211,7 +212,7 @@ namespace Bigint{
 		return z;
 	}
 	ulllint operator*(const ulllint& x,const ulllint& y){
-		static cp tmp[MAX_SIZE];
+		static FFT::cp tmp[ulllint::MAX_SIZE];
 		static ulllint c;
 		ulllint::size_t n=x.size()+y.size(),s=1;
 		while(s<n)s<<=1;
@@ -219,15 +220,16 @@ namespace Bigint{
 		for(ulllint::size_t i=0;i<s;i++)tmp[i]=0; 
 		for(ulllint::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
 		for(ulllint::size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
-		rundif(tmp,s);
+		FFT::rundif(tmp,s);
 		for(ulllint::size_t i=0;i<s;i++)tmp[i]*=tmp[i];
-		rundit(tmp,s);
+		FFT::rundit(tmp,s);
 		const int kkk=s;
 		const double change=0.5/kkk;
+		long long int _tmp=0;
 		for(ulllint::size_t i=0;i<s;i++){
-			c[i]+=llround(tmp[i].imag()*(change));
-			c[i+1]+=c[i]/10000;
-			c[i]%=10000;
+			_tmp+=llround(tmp[i].imag()*(change));
+			c[i]=_tmp%ulllint::base;
+			_tmp/=ulllint::base;
 		}
 		while(c.size()>1&&c[c.size()-1]==0)c.nums.pop_back();
 		return c;
