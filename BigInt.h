@@ -1,4 +1,3 @@
-//C plus plus
 #include<cstring>
 #include<cmath>
 #include<vector>
@@ -10,7 +9,7 @@ namespace Bigint{
 	char temp[MAX_SIZE+1];
 	// Fast Fourier Transform
 	using cp=std::complex<double>;
-	const double pi=acos(-1),pi2=2*acos(-1),pi6=6*acos(-1);
+	constexpr double pi=acos(-1),pi2=2*acos(-1),pi6=6*acos(-1);
 	using ll=long long;
 	template<const int n>
 	void dif(cp a[]){
