@@ -4,4 +4,4 @@
 
 压 $4$ 位，最多（压后）存 $10^6$ 位数。
 
-[洛谷评测记录](https://www.luogu.com.cn/record/156983002)。
+乘法效率：[洛谷评测记录](https://www.luogu.com.cn/record/157070952)。
