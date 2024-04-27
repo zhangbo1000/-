@@ -123,6 +123,7 @@ namespace FFT{
 	}
 }
 namespace Bigint{
+	//unsigned long long long int
 	class ulllint{
 		friend std::istream;
 		friend std::ostream;
@@ -164,9 +165,33 @@ namespace Bigint{
 		friend ulllint operator+(const ulllint& x,const ulllint& y);
 		friend ulllint operator-(const ulllint& x,const ulllint& y);
 		friend ulllint operator*(const ulllint& x,const ulllint& y);
+		ulllint operator+=(const ulllint& x){
+			if(x.size()>size()){
+				nums.resize(x.size()+1);
+			}
+			for(size_t i=0;i<size();i++){
+				nums[i]+=x[i];
+				nums[i+1]+=nums[i]/base;
+				nums[i]%=base;
+			}
+			while((size()>1)&&nums[size()-1]==0)nums.pop_back();
+			return *this;
+		}
+		ulllint operator-=(const ulllint& x){
+			for(size_t i=0;i<x.size();i++){
+				if(nums[i]<x[i]){
+					nums[i+1]--;
+					nums[i]+=base;
+				}
+				nums[i]-=x[i];
+			}
+			while(size()>1&&nums[size()-1]==0)nums.pop_back();
+			return *this;
+		}
+		ulllint operator*=(const ulllint& x){(*this)=(*this)*x;return *(this);}
 	};
 	char temp[ulllint::MAX_SIZE+1];
-	// input and output,use iostream
+	//输入输出，采用 iostream
 	std::istream& operator>>(std::istream& cin,ulllint& x){
 		std::cin>>temp;
 		const size_t l=strlen(temp);
@@ -214,8 +239,8 @@ namespace Bigint{
 	ulllint operator*(const ulllint& x,const ulllint& y){
 		static FFT::cp tmp[ulllint::MAX_SIZE];
 		static ulllint c;
-		ulllint::size_t n=x.size()+y.size(),s=1;
-		while(s<n)s<<=1;
+		ulllint::size_t n=x.size()+y.size()-1,s=1;
+		while(s<=n)s<<=1;
 		c.nums.resize(s);
 		for(ulllint::size_t i=0;i<s;i++)tmp[i]=0; 
 		for(ulllint::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
