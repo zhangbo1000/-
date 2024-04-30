@@ -5,15 +5,56 @@
 #include<iomanip>
 #include<complex>
 namespace FFT{
-	// Fast Fourier Transform
-	using cp=std::complex<double>;
+	//complex numbers
+	using size_t=unsigned int;
+	class complex{
+		double a,b;
+		public:
+		complex(const complex& x):a(x.a),b(x.b){}
+		complex(){}
+		constexpr complex(const double& x,const double& y):a(x),b(y){}
+		complex(const double& x):a(x),b(0){}
+		inline const complex operator=(const double& x){return a=x;}
+		inline const complex operator=(const complex& x){
+			a=x.a;b=x.b;
+			return *this;
+		}
+		inline const complex operator+(const complex& x)const{
+			return complex(a+x.a,b+x.b);
+		}
+		inline const complex operator-(const complex& x)const{
+			return complex(a-x.a,b-x.b);
+		}
+		inline const complex operator*(const complex& x)const{
+			return complex(a*x.a-b*x.b,a*x.b+b*x.a);
+		}
+		inline const complex operator+=(const complex& x){
+			a+=x.a;
+			b+=x.b;
+			return *this;
+		}
+		inline const complex operator-=(const complex& x){
+			a-=x.a;
+			b-=x.b;
+			return *this;
+		}
+		inline const complex operator*=(const complex& x){
+			return (*this)=(*this)*x;
+		}
+		inline double real()const{return a;}
+		inline double imag()const{return b;}
+		inline double real(const double& x){return a=x;}
+		inline double imag(const double& x){return b=x;}
+	};
+	//Fast Fourier Transform
+	using cp=complex;
 	constexpr double pi=acos(-1),pi2=2*acos(-1),pi6=6*acos(-1);
-	template<const int n>
+	template<const size_t n>
 	void dif(cp a[]){
-		constexpr int half=n/2,quarter=n/4;
+		constexpr size_t half=n>>1,quarter=n>>2;
 		cp w(1,0),w3(1,0);
 		constexpr cp wn(cos(pi2/n),sin(pi2/n)),wn3(cos(pi6/n),sin(pi6/n));
-		for(int i=0;i<quarter;i++){
+		for(size_t i=0;i<quarter;i++){
 			if(!(i%2048))w=cp(cos(pi2*i/n),sin(pi2*i/n)),w3=w*w*w;
 			const cp tmp1=a[i],tmp2=a[i+quarter],tmp3=a[i+half],tmp4=a[i+half+quarter];
 			cp x=tmp1-tmp3,y=tmp2-tmp4;
@@ -36,10 +77,10 @@ namespace FFT{
 	template<>
 	void dif<2>(cp a[]){
 		const cp x=a[0],y=a[1];
-		a[0]=x+y;
+		a[0]+=y;
 		a[1]=x-y;
 	}
-	void rundif(cp a[],const int& n){
+	void rundif(cp a[],const size_t& n){
 		switch (n) {
 			case 1<<1:dif<1<<1>(a);break;
 			case 1<<2:dif<1<<2>(a);break;
@@ -64,15 +105,15 @@ namespace FFT{
 			case 1<<21:dif<1<<21>(a);break;
 		}
 	}
-	template<const int n>
+	template<const size_t n>
 	void dit(cp a[]){
-		constexpr int half=n/2,quarter=n/4;
+		constexpr size_t half=n>>1,quarter=n>>2;
 		dit<half>(a);
 		dit<quarter>(a+half);
 		dit<quarter>(a+half+quarter);
 		cp w(1,0),w3(1,0);
 		constexpr cp wn(cos(pi2/n),-sin(pi2/n)),wn3(cos(pi6/n),-sin(pi6/n));
-		for(int i=0;i<quarter;i++){
+		for(size_t i=0;i<quarter;i++){
 			if(!(i%2048))w=cp(cos(pi2*i/n),-sin(pi2*i/n)),w3=w*w*w;
 			const cp tmp1=w*a[i+half],tmp2=w3*a[i+half+quarter];
 			const cp x=a[i],y=tmp1+tmp2;
@@ -93,10 +134,10 @@ namespace FFT{
 	template<>
 	void dit<2>(cp a[]){
 		const cp x=a[0],y=a[1];
-		a[0]=x+y;
+		a[0]+=y;
 		a[1]=x-y;
 	}
-	void rundit(cp a[],const int& n){
+	void rundit(cp a[],const size_t& n){
 		switch (n) {
 			case 1<<1:dit<1<<1>(a);break;
 			case 1<<2:dit<1<<2>(a);break;
@@ -130,7 +171,7 @@ namespace Bigint{
 		using ll=short int;
 		using size_t=unsigned int;
 		static constexpr size_t len=4;
-		static constexpr size_t base=10000;
+		static constexpr ll base=10000;
 		std::vector<ll>nums;
 		inline std::vector<ll>::const_iterator begin()const{return nums.begin();}
 		inline std::vector<ll>::const_iterator end()const{return nums.end();}
@@ -165,6 +206,7 @@ namespace Bigint{
 		friend ulllint operator+(const ulllint& x,const ulllint& y);
 		friend ulllint operator-(const ulllint& x,const ulllint& y);
 		friend ulllint operator*(const ulllint& x,const ulllint& y);
+		friend ulllint operator/(const ulllint& x,const ulllint& y);
 		ulllint operator+=(const ulllint& x){
 			if(x.size()>size()){
 				nums.resize(x.size()+1);
@@ -196,7 +238,7 @@ namespace Bigint{
 		std::cin>>temp;
 		const size_t l=strlen(temp);
 		size_t j=-1,w=1;
-		x.nums=std::vector<ulllint::ll>(l/ulllint::len+2,0);
+		x.nums.resize(l/ulllint::len+2);
 		for(size_t i=0;i<l;i++){
 			if(!(i%ulllint::len))j++,w=1;
 			x[j]+=(temp[l-i-1]^'0')*w;
