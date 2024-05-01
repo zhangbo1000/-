@@ -3,7 +3,6 @@
 #include<vector>
 #include<iostream>
 #include<iomanip>
-#include<complex>
 namespace FFT{
 	//complex numbers
 	using size_t=unsigned int;
