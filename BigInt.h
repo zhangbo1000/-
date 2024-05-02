@@ -8,42 +8,42 @@ namespace FFT{
 	using size_t=unsigned int;
 	class complex{
 		double a,b;
-		public:
+	public:
 		complex(const complex& x):a(x.a),b(x.b){}
 		complex(){}
 		constexpr complex(const double& x,const double& y):a(x),b(y){}
 		complex(const double& x):a(x),b(0){}
-		inline const complex operator=(const double& x){return a=x;}
-		inline const complex operator=(const complex& x){
+		const complex operator=(const double& x){return a=x;}
+		const complex operator=(const complex& x){
 			a=x.a;b=x.b;
 			return *this;
 		}
-		inline const complex operator+(const complex& x)const{
+		const complex operator+(const complex& x)const{
 			return complex(a+x.a,b+x.b);
 		}
-		inline const complex operator-(const complex& x)const{
+		const complex operator-(const complex& x)const{
 			return complex(a-x.a,b-x.b);
 		}
-		inline const complex operator*(const complex& x)const{
+		const complex operator*(const complex& x)const{
 			return complex(a*x.a-b*x.b,a*x.b+b*x.a);
 		}
-		inline const complex operator+=(const complex& x){
+		const complex operator+=(const complex& x){
 			a+=x.a;
 			b+=x.b;
 			return *this;
 		}
-		inline const complex operator-=(const complex& x){
+		const complex operator-=(const complex& x){
 			a-=x.a;
 			b-=x.b;
 			return *this;
 		}
-		inline const complex operator*=(const complex& x){
+		const complex operator*=(const complex& x){
 			return (*this)=(*this)*x;
 		}
-		inline double real()const{return a;}
-		inline double imag()const{return b;}
-		inline double real(const double& x){return a=x;}
-		inline double imag(const double& x){return b=x;}
+		double real()const{return a;}
+		double imag()const{return b;}
+		double real(const double& x){return a=x;}
+		double imag(const double& x){return b=x;}
 	};
 	//Fast Fourier Transform
 	using cp=complex;
@@ -54,7 +54,7 @@ namespace FFT{
 		cp w(1,0),w3(1,0);
 		constexpr cp wn(cos(pi2/n),sin(pi2/n)),wn3(cos(pi6/n),sin(pi6/n));
 		for(size_t i=0;i<quarter;i++){
-			if(!(i%2048))w=cp(cos(pi2*i/n),sin(pi2*i/n)),w3=w*w*w;
+			if(!(i&2047))w=cp(cos(pi2*i/n),sin(pi2*i/n)),w3=w*w*w;
 			const cp tmp1=a[i],tmp2=a[i+quarter],tmp3=a[i+half],tmp4=a[i+half+quarter];
 			cp x=tmp1-tmp3,y=tmp2-tmp4;
 			y=cp(y.imag(),-y.real());
@@ -113,7 +113,7 @@ namespace FFT{
 		cp w(1,0),w3(1,0);
 		constexpr cp wn(cos(pi2/n),-sin(pi2/n)),wn3(cos(pi6/n),-sin(pi6/n));
 		for(size_t i=0;i<quarter;i++){
-			if(!(i%2048))w=cp(cos(pi2*i/n),-sin(pi2*i/n)),w3=w*w*w;
+			if(!(i&2047))w=cp(cos(pi2*i/n),-sin(pi2*i/n)),w3=w*w*w;
 			const cp tmp1=w*a[i+half],tmp2=w3*a[i+half+quarter];
 			const cp x=a[i],y=tmp1+tmp2;
 			cp x1=a[i+quarter],y1=tmp1-tmp2;
@@ -172,11 +172,11 @@ namespace Bigint{
 		static constexpr size_t len=4;
 		static constexpr ll base=10000;
 		std::vector<ll>nums;
-		inline std::vector<ll>::const_iterator begin()const{return nums.begin();}
-		inline std::vector<ll>::const_iterator end()const{return nums.end();}
-		inline size_t size()const{return nums.size();}
-		inline ll& operator[](const size_t& x){return nums[x];}
-		inline const ll& operator[](const size_t& x)const{return nums[x];}
+		std::vector<ll>::const_iterator begin()const{return nums.begin();}
+		std::vector<ll>::const_iterator end()const{return nums.end();}
+		size_t size()const{return nums.size();}
+		ll& operator[](const size_t& x){return nums[x];}
+		const ll& operator[](const size_t& x)const{return nums[x];}
 		ulllint(const std::vector<ll>::const_iterator& first,const std::vector<ll>::const_iterator& last){
 			nums=std::vector<ll>(first,last);
 		}// 用 vector 构造。
@@ -293,7 +293,7 @@ namespace Bigint{
 		const double change=0.5/kkk;
 		long long int _tmp=0;
 		for(ulllint::size_t i=0;i<s;i++){
-			_tmp+=llround(tmp[i].imag()*(change));
+			_tmp+=(long long)((tmp[i].imag()*change)+0.5);
 			c[i]=_tmp%ulllint::base;
 			_tmp/=ulllint::base;
 		}
