@@ -1,3 +1,6 @@
+#ifndef BIG_NUMBERS
+#define BIG_NUMBERS 1
+
 #include<cstring>
 #include<cmath>
 #include<vector>
@@ -301,3 +304,4 @@ namespace Bigint{
 		return c;
 	}
 }
+#endif
