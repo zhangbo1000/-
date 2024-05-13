@@ -1,63 +1,25 @@
-#ifndef BIG_NUMBERS
-#define BIG_NUMBERS 1
-
+#ifndef BIGINT
+#define BIGINT 1
+#warning If G++ tell you "unused parameter 'a' [-Wunused-parameter]",it is NOT wrong.
 #include<cstring>
-#include<cmath>
 #include<vector>
 #include<iostream>
 #include<iomanip>
+#include"Types.h"
+#include"Constant.h"
 namespace FFT{
 	//complex numbers
-	using size_t=unsigned int;
-	class complex{
-		double a,b;
-	public:
-		complex(const complex& x):a(x.a),b(x.b){}
-		complex(){}
-		constexpr complex(const double& x,const double& y):a(x),b(y){}
-		complex(const double& x):a(x),b(0){}
-		const complex operator=(const double& x){return a=x;}
-		const complex operator=(const complex& x){
-			a=x.a;b=x.b;
-			return *this;
-		}
-		const complex operator+(const complex& x)const{
-			return complex(a+x.a,b+x.b);
-		}
-		const complex operator-(const complex& x)const{
-			return complex(a-x.a,b-x.b);
-		}
-		const complex operator*(const complex& x)const{
-			return complex(a*x.a-b*x.b,a*x.b+b*x.a);
-		}
-		const complex operator+=(const complex& x){
-			a+=x.a;
-			b+=x.b;
-			return *this;
-		}
-		const complex operator-=(const complex& x){
-			a-=x.a;
-			b-=x.b;
-			return *this;
-		}
-		const complex operator*=(const complex& x){
-			return (*this)=(*this)*x;
-		}
-		double real()const{return a;}
-		double imag()const{return b;}
-		double real(const double& x){return a=x;}
-		double imag(const double& x){return b=x;}
-	};
+	using size_t=Types::size_t;
 	//Fast Fourier Transform
-	using cp=complex;
-	constexpr double pi=acos(-1),pi2=2*acos(-1),pi6=6*acos(-1);
+	using cp=Types::complex;
+	using complex=Types::complex;
 	template<const size_t n>
 	void dif(cp a[]){
 		constexpr size_t half=n>>1,quarter=n>>2;
 		cp w(1,0),w3(1,0);
-		constexpr cp wn(cos(pi2/n),sin(pi2/n)),wn3(cos(pi6/n),sin(pi6/n));
+		const cp wn(cos(Constant::pi2/n),sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),sin(Constant::pi6/n));
 		for(size_t i=0;i<quarter;i++){
-			if(!(i&2047))w=cp(cos(pi2*i/n),sin(pi2*i/n)),w3=w*w*w;
+			if(!(i&2047))w=cp(cos(Constant::pi2*i/n),sin(Constant::pi2*i/n)),w3=w*w*w;
 			const cp tmp1=a[i],tmp2=a[i+quarter],tmp3=a[i+half],tmp4=a[i+half+quarter];
 			cp x=tmp1-tmp3,y=tmp2-tmp4;
 			y=cp(y.imag(),-y.real());
@@ -114,9 +76,9 @@ namespace FFT{
 		dit<quarter>(a+half);
 		dit<quarter>(a+half+quarter);
 		cp w(1,0),w3(1,0);
-		constexpr cp wn(cos(pi2/n),-sin(pi2/n)),wn3(cos(pi6/n),-sin(pi6/n));
+		const cp wn(cos(Constant::pi2/n),-sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),-sin(Constant::pi6/n));
 		for(size_t i=0;i<quarter;i++){
-			if(!(i&2047))w=cp(cos(pi2*i/n),-sin(pi2*i/n)),w3=w*w*w;
+			if(!(i&2047))w=cp(cos(Constant::pi2*i/n),-sin(Constant::pi2*i/n)),w3=w*w*w;
 			const cp tmp1=w*a[i+half],tmp2=w3*a[i+half+quarter];
 			const cp x=a[i],y=tmp1+tmp2;
 			cp x1=a[i+quarter],y1=tmp1-tmp2;
@@ -167,11 +129,14 @@ namespace FFT{
 }
 namespace Bigint{
 	//unsigned long long long int
+	using size_t=Types::size_t;
+	using f64=Types::f64;
+	using u64int=Types::u64int;
+	using _32int=Types::_32int;
 	class ulllint{
 		friend std::istream;
 		friend std::ostream;
-		using ll=short int;
-		using size_t=unsigned int;
+		using ll=Types::_16int;
 		static constexpr size_t len=4;
 		static constexpr ll base=10000;
 		std::vector<ll>nums;
@@ -232,7 +197,8 @@ namespace Bigint{
 			while(size()>1&&nums[size()-1]==0)nums.pop_back();
 			return *this;
 		}
-		ulllint operator*=(const ulllint& x){(*this)=(*this)*x;return *(this);}
+		friend ulllint operator*=(ulllint& x,const ulllint& y);
+		//	ulllint operator*=(const ulllint& x){(*this)=(*this)*x;return *(this);}
 	};
 	char temp[ulllint::MAX_SIZE+1];
 	//输入输出，采用 iostream
@@ -283,25 +249,47 @@ namespace Bigint{
 	ulllint operator*(const ulllint& x,const ulllint& y){
 		static FFT::cp tmp[ulllint::MAX_SIZE];
 		static ulllint c;
-		ulllint::size_t n=x.size()+y.size()-1,s=1;
+		size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
 		c.nums.resize(s);
-		for(ulllint::size_t i=0;i<s;i++)tmp[i]=0; 
-		for(ulllint::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
-		for(ulllint::size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
+		for(size_t i=std::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
+		for(size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
+		for(size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
 		FFT::rundif(tmp,s);
-		for(ulllint::size_t i=0;i<s;i++)tmp[i]*=tmp[i];
+		for(size_t i=0;i<s;i++)tmp[i]*=tmp[i];
 		FFT::rundit(tmp,s);
-		const int kkk=s;
-		const double change=0.5/kkk;
-		long long int _tmp=0;
-		for(ulllint::size_t i=0;i<s;i++){
-			_tmp+=(long long)((tmp[i].imag()*change)+0.5);
+		const _32int kkk=s;
+		const f64 change=0.5/kkk;
+		u64int _tmp=0;
+		for(size_t i=0;i<s;i++){
+			_tmp+=(u64int)((tmp[i].imag()*change)+0.5);
 			c[i]=_tmp%ulllint::base;
 			_tmp/=ulllint::base;
 		}
 		while(c.size()>1&&c[c.size()-1]==0)c.nums.pop_back();
 		return c;
+	}
+	ulllint operator*=(ulllint& x,const ulllint& y){
+		static FFT::cp tmp[ulllint::MAX_SIZE];
+		size_t n=x.size()+y.size()-1,s=1;
+		while(s<=n)s<<=1;
+		for(size_t i=std::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
+		for(size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
+		for(size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
+		FFT::rundif(tmp,s);
+		for(size_t i=0;i<s;i++)tmp[i]*=tmp[i];
+		FFT::rundit(tmp,s);
+		x.nums.resize(s);
+		const int kkk=s;
+		const double change=0.5/kkk;
+		unsigned long long int _tmp=0;
+		for(size_t i=0;i<s;i++){
+			_tmp+=(unsigned long long int)((tmp[i].imag()*change)+0.5);
+			x[i]=_tmp%ulllint::base;
+			_tmp/=ulllint::base;
+		}
+		while(x.size()>1&&x[x.size()-1]==0)x.nums.pop_back();
+		return x;
 	}
 }
 #endif
