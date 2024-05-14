@@ -1,6 +1,7 @@
 #ifndef TYPES
 #define TYPES 1
 namespace Types{
+	using ulong=unsigned long int;
 	using size_t=unsigned int;
 	using uint=unsigned int;
 	using u32int=unsigned long int;
