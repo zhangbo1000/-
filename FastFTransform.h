@@ -1,5 +1,5 @@
-#ifndef FASTFTRANSLAFORM
-#define FASTFTRANSLAFORM 1
+#ifndef FASTFTRANSFORM
+#define FASTFTRANSFORM 1
 #include"Types.h"
 #include"Constant.h"
 namespace FFT{
