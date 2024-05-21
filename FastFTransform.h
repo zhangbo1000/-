@@ -1,22 +1,20 @@
 #ifndef FASTFTRANSFORM
 #define FASTFTRANSFORM 1
+#include<cmath>
 #include"Types.h"
 #include"Constant.h"
 namespace FFT{
-	//complex numbers
-	using size_t=Types::size_t;
 	//Fast Fourier Transform
-	using complex=Types::complex;
 	template<const size_t n>
-	void dif(complex a[]){
+	void dif(Types::complex a[]){
 		constexpr size_t half=n>>1,quarter=n>>2;
-		complex w(1,0),w3(1,0);
-		const complex wn(cos(Constant::pi2/n),sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),sin(Constant::pi6/n));
+		Types::complex w(1,0),w3(1,0);
+		const Types::complex wn(cos(Constant::pi2/n),sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),sin(Constant::pi6/n));
 		for(size_t i=0;i<quarter;i++){
-			if(!(i&2047))w=complex(cos(Constant::pi2*i/n),sin(Constant::pi2*i/n)),w3=w*w*w;
-			const complex tmp1=a[i],tmp2=a[i+quarter],tmp3=a[i+half],tmp4=a[i+half+quarter];
-			complex x=tmp1-tmp3,y=tmp2-tmp4;
-			y=complex(y.imag(),-y.real());
+			if(!(i&2047))w=Types::complex(cos(Constant::pi2*i/n),sin(Constant::pi2*i/n)),w3=w*w*w;
+			const Types::complex tmp1=a[i],tmp2=a[i+quarter],tmp3=a[i+half],tmp4=a[i+half+quarter];
+			Types::complex x=tmp1-tmp3,y=tmp2-tmp4;
+			y=Types::complex(y.imag(),-y.real());
 			a[i]+=tmp3;
 			a[i+quarter]+=tmp4;
 			a[i+half]=(x-y)*w;
@@ -29,16 +27,16 @@ namespace FFT{
 		dif<quarter>(a+half+quarter);
 	}
 	template<>
-	void dif<1>(complex a[]){}
+	void dif<1>(Types::complex a[]){}
 	template<>
-	void dif<0>(complex a[]){}
+	void dif<0>(Types::complex a[]){}
 	template<>
-	void dif<2>(complex a[]){
-		const complex x=a[0],y=a[1];
+	void dif<2>(Types::complex a[]){
+		const Types::complex x=a[0],y=a[1];
 		a[0]+=y;
 		a[1]=x-y;
 	}
-	void rundif(complex a[],const size_t& n){
+	void rundif(Types::complex a[],const size_t& n){
 		switch (n) {
 			case 1<<1:dif<1<<1>(a);break;
 			case 1<<2:dif<1<<2>(a);break;
@@ -64,19 +62,19 @@ namespace FFT{
 		}
 	}
 	template<const size_t n>
-	void dit(complex a[]){
+	void dit(Types::complex a[]){
 		constexpr size_t half=n>>1,quarter=n>>2;
 		dit<half>(a);
 		dit<quarter>(a+half);
 		dit<quarter>(a+half+quarter);
-		complex w(1,0),w3(1,0);
-		const complex wn(cos(Constant::pi2/n),-sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),-sin(Constant::pi6/n));
+		Types::complex w(1,0),w3(1,0);
+		const Types::complex wn(cos(Constant::pi2/n),-sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),-sin(Constant::pi6/n));
 		for(size_t i=0;i<quarter;i++){
-			if(!(i&2047))w=complex(cos(Constant::pi2*i/n),-sin(Constant::pi2*i/n)),w3=w*w*w;
-			const complex tmp1=w*a[i+half],tmp2=w3*a[i+half+quarter];
-			const complex x=a[i],y=tmp1+tmp2;
-			complex x1=a[i+quarter],y1=tmp1-tmp2;
-			y1=complex(y1.imag(),-y1.real());
+			if(!(i&2047))w=Types::complex(cos(Constant::pi2*i/n),-sin(Constant::pi2*i/n)),w3=w*w*w;
+			const Types::complex tmp1=w*a[i+half],tmp2=w3*a[i+half+quarter];
+			const Types::complex x=a[i],y=tmp1+tmp2;
+			Types::complex x1=a[i+quarter],y1=tmp1-tmp2;
+			y1=Types::complex(y1.imag(),-y1.real());
 			a[i]+=y;
 			a[i+quarter]+=y1;
 			a[i+half]=x-y;
@@ -86,16 +84,16 @@ namespace FFT{
 		}
 	}
 	template<>
-	void dit<1>(complex a[]){}
+	void dit<1>(Types::complex a[]){}
 	template<>
-	void dit<0>(complex a[]){}
+	void dit<0>(Types::complex a[]){}
 	template<>
-	void dit<2>(complex a[]){
-		const complex x=a[0],y=a[1];
+	void dit<2>(Types::complex a[]){
+		const Types::complex x=a[0],y=a[1];
 		a[0]+=y;
 		a[1]=x-y;
 	}
-	void rundit(complex a[],const size_t& n){
+	void rundit(Types::complex a[],const size_t& n){
 		switch (n) {
 			case 1<<1:dit<1<<1>(a);break;
 			case 1<<2:dit<1<<2>(a);break;
