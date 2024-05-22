@@ -1,6 +1,6 @@
 - update 2024.5.22：修复了一堆 bug，增加了比较大小（**C++ 20** 以上编译的实现方式和 C++ 20 以下略有不同），开始了除法的编写。
 
-手写的大**整**数库，效率一般，需要 C++ 11 以上编译，使用时请确保 `BigInt.h`，`Types.h`，`FastFTranForm.h`，`Constant.h` 在同一文件夹。
+手写的大**整**数库，效率一般，需要 C++ 11 以上编译，使用时请确保 `BigInt.h`，`Types.h`，`FastFTransForm.h`，`Constant.h` 在同一文件夹。
 
 大整数类名为 `ulllint`，意即 `unsigned long long long int`。
 
