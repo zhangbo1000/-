@@ -11,11 +11,15 @@ namespace Types{
 	using _64int=signed long long int;
 	using _32int=signed long int;
 	using _16int=signed short int;
+	using _8int=signed char;
+	using u8int=unsigned char;
+	using uint8=unsigned char;
 	using uint32=unsigned long int;
 	using uint64=unsigned long long int;
 	using int64=signed long long int;
 	using int32=signed long int;
 	using int16=signed short int;
+	using int8=signed char;
 	using flong=long double;
 	using fshort=float;
 	using f128=long double;
@@ -25,10 +29,10 @@ namespace Types{
 	class complex{
 		f64 a,b;
 	public:
-		constexpr complex(const complex& x):a(x.a),b(x.b){}
+		complex(const complex& x):a(x.a),b(x.b){}
 		complex(){}
-		constexpr complex(const f64& x,const f64& y):a(x),b(y){}
-		constexpr complex(const f64& x):a(x),b(0){}
+		complex(const f64& x,const f64& y):a(x),b(y){}
+		complex(const f64& x):a(x),b(0){}
 		const complex operator=(const f64& x){return a=x;}
 		const complex operator=(const complex& x){
 			a=x.a;b=x.b;
