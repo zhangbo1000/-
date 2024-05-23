@@ -1,16 +1,17 @@
 #ifndef FASTFTRANSFORM
 #define FASTFTRANSFORM 1
 #include<cmath>
+#warning If GCC tells you "unused parameter 'a' [-Wunused-parameter]",it is NOT wrong.
 #include"Types.h"
 #include"Constant.h"
 namespace FFT{
 	//Fast Fourier Transform
-	template<const size_t n>
+	template<const Types::size_t n>
 	void dif(Types::complex a[]){
-		constexpr size_t half=n>>1,quarter=n>>2;
+		constexpr Types::size_t half=n>>1,quarter=n>>2;
 		Types::complex w(1,0),w3(1,0);
 		const Types::complex wn(cos(Constant::pi2/n),sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),sin(Constant::pi6/n));
-		for(size_t i=0;i<quarter;i++){
+		for(Types::size_t i=0;i<quarter;i++){
 			if(!(i&2047))w=Types::complex(cos(Constant::pi2*i/n),sin(Constant::pi2*i/n)),w3=w*w*w;
 			const Types::complex tmp1=a[i],tmp2=a[i+quarter],tmp3=a[i+half],tmp4=a[i+half+quarter];
 			Types::complex x=tmp1-tmp3,y=tmp2-tmp4;
@@ -61,9 +62,9 @@ namespace FFT{
 			case 1<<21:dif<1<<21>(a);break;
 		}
 	}
-	template<const size_t n>
+	template<const Types::size_t n>
 	void dit(Types::complex a[]){
-		constexpr size_t half=n>>1,quarter=n>>2;
+		constexpr Types::size_t half=n>>1,quarter=n>>2;
 		dit<half>(a);
 		dit<quarter>(a+half);
 		dit<quarter>(a+half+quarter);
@@ -115,7 +116,6 @@ namespace FFT{
 			case 1<<18:dit<1<<18>(a);break;
 			case 1<<19:dit<1<<19>(a);break;
 			case 1<<20:dit<1<<20>(a);break;
-			case 1<<21:dit<1<<21>(a);break;
 		}
 	}
 }
