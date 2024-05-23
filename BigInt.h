@@ -1,36 +1,12 @@
 #ifndef BIGINT
 #define BIGINT 1
-#warning If G++ tell you "unused parameter 'a' [-Wunused-parameter]",it is NOT wrong.
 #include<cstring>
 #include<vector>
 #include"FastFTransform.h"
 namespace BigInt{
 	//unsigned long long long int
-	class __BigFloat{
-		using ll=Types::_16int;
-		static constexpr Types::size_t len=4;
-		static constexpr ll base=10000;
-		std::vector<ll>nums;
-		Types::_32int ratio;
-		std::vector<ll>::const_iterator begin()const{return nums.begin();}
-		std::vector<ll>::const_iterator end()const{return nums.end();}
-		Types::size_t size()const{return nums.size();}
-		ll& operator[](const Types::size_t& x){return nums[x];}
-		const ll& operator[](const Types::size_t& x)const{return nums[x];}
-		friend __BigFloat operator+(const __BigFloat&,const __BigFloat&);
-		friend __BigFloat operator-(const __BigFloat&,const __BigFloat&);
-		friend __BigFloat operator*(const __BigFloat&,const __BigFloat&);
-		__BigFloat(const __BigFloat& x){
-			nums=x.nums;
-			ratio=x.ratio;
-		}
-		__BigFloat& operator=(const __BigFloat& x){
-			nums=x.nums;
-			ratio=x.ratio;
-			return *this;
-		}
-		__BigFloat(){};
-	};
+	class ulllint;
+	class __BigFloat;
 	class ulllint{
 #ifdef _GLIBCXX_IOMANIP
 #ifdef _GLIBCXX_IOSTREAM
@@ -38,6 +14,7 @@ namespace BigInt{
 		friend std::ostream;
 #endif
 #endif
+		friend __BigFloat;
 		using ll=Types::_16int;
 		static constexpr Types::size_t len=4;
 		static constexpr ll base=10000;
@@ -47,13 +24,12 @@ namespace BigInt{
 		Types::size_t size()const{return nums.size();}
 		ll& operator[](const Types::size_t& x){return nums[x];}
 		const ll& operator[](const Types::size_t& x)const{return nums[x];}
-		ulllint(const std::vector<ll>::const_iterator& first,const std::vector<ll>::const_iterator& last){
-			nums=std::vector<ll>(first,last);
-		}// 用 vector 构造。
+		ulllint(const std::vector<ll>::const_iterator& first,const std::vector<ll>::const_iterator& last)
+		:nums(std::vector<ll>(first,last)){}// 用 vector 构造。
 		ulllint(const Types::_16int& x,const ll& y){
 			nums=std::vector<ll>(x,y);
 		}// 用多个相同数构造，不处理进位。
-		ulllint(const std::vector<ll>&x){nums=x;}
+		ulllint(const std::vector<ll>&x):nums(x){}
 	public:
 		//用整数构造
 		ulllint(const Types::size_t& x=0){
@@ -62,9 +38,7 @@ namespace BigInt{
 			while(nums[i]>base)nums.push_back(nums[i]/base),nums[i++]%=base;
 		}
 		//复制
-		ulllint(const ulllint& x){
-			nums=x.nums;
-		}
+		ulllint(const ulllint& x):nums(x.nums){}
 		ulllint& operator=(const ulllint& x){
 			nums=x.nums;
 			return *this;
@@ -80,6 +54,7 @@ namespace BigInt{
 		friend ulllint operator-(const ulllint&,const ulllint&);
 		friend ulllint operator*(const ulllint&,const ulllint&);
 		friend ulllint operator/(const ulllint&,const ulllint&);
+		friend ulllint operator<<(const ulllint&,const Types::size_t&);
 #if __cplusplus >= 202002L	
 		friend auto operator<=>(const ulllint&,const ulllint&);
 #else 
@@ -115,6 +90,10 @@ namespace BigInt{
 			return *this;
 		}
 		friend ulllint operator*=(ulllint& x,const ulllint& y);
+		ulllint operator<<=(const Types::size_t& x){
+			nums.insert(begin(),x,0);
+			return *this;
+		}
 	};
 	char temp[ulllint::MAX_SIZE+1];
 	//输入输出，采用 iostream
@@ -136,7 +115,7 @@ namespace BigInt{
 	std::ostream& operator<<(std::ostream& cout,const ulllint& x){
 		if(x.size()==0)return cout;
 		cout<<x[x.size()-1];
-		for(signed int i=((int)x.size())-2;i>=0;i--){
+		for(Types::_32int i=((Types::_32int)x.size())-2;i>=0;i--){
 			cout<<std::setfill('0')<<std::setw(ulllint::len)<<x[i];
 		}
 		return cout;
@@ -171,7 +150,7 @@ namespace BigInt{
 		static ulllint c;
 		Types::size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
-		c.nums.resize(s);
+		c.nums=std::vector<ulllint::ll>(s,0);
 		for(Types::size_t i=std::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
 		for(Types::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
 		for(Types::size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
@@ -187,6 +166,11 @@ namespace BigInt{
 			_tmp/=ulllint::base;
 		}
 		while(c.size()>1&&c[c.size()-1]==0)c.nums.pop_back();
+		return c;
+	}
+	ulllint operator<<(const ulllint& x,const Types::size_t& y){
+		ulllint c(x);
+		c.nums.insert(c.begin(),y,0);
 		return c;
 	}
 	ulllint operator*=(ulllint& x,const ulllint& y){
@@ -216,8 +200,7 @@ namespace BigInt{
 		if(x.size()<y.size())return -1;
 		if(x.size()>y.size())return 1;
 		for(int i=x.size()-1;i>=0;i--){
-			if(x[i]>y[i])return 1;
-			if(x[i]<y[i])return -1;
+			if(x[i]!=y[i])return x[i]-y[i];
 		}
 		return 0;
 	}
@@ -229,8 +212,7 @@ namespace BigInt{
 		if(x.size()<y.size())return -1;
 		if(x.size()>y.size())return 1;
 		for(int i=x.size()-1;i>=0;i--){
-			if(x[i]>y[i])return 1;
-			if(x[i]<y[i])return -1;
+			if(x[i]!=y[i])return x[i]-y[i];
 		}
 		return 0;
 	}
@@ -241,5 +223,43 @@ namespace BigInt{
 	bool operator==(const ulllint& x,const ulllint& y){return __comp(x,y)==0;}
 	bool operator!=(const ulllint& x,const ulllint& y){return __comp(x,y)!=0;}
 #endif
+	class __BigFloat{
+		ulllint nums;//数字
+		Types::size_t ratio;//小数点在从低到高第几位
+		__BigFloat(const __BigFloat& x):nums(x.nums),ratio(x.ratio){}
+		__BigFloat(const ulllint& x):nums(x),ratio(0){}
+		__BigFloat(const ulllint& x,const Types::size_t y):nums(x),ratio(y){}
+		__BigFloat(){}
+		friend __BigFloat operator+(__BigFloat,__BigFloat);
+		friend __BigFloat operator-(__BigFloat,__BigFloat);
+		friend __BigFloat operator*(const __BigFloat&,const __BigFloat&);
+	};
+	__BigFloat operator+(__BigFloat x,__BigFloat y){
+		if(x.ratio<y.ratio){//对齐
+			x.nums<<=y.ratio-x.ratio;
+			x.ratio=y.ratio;
+		}
+		else if(x.ratio>y.ratio){
+			y.nums<<=x.ratio-y.ratio;
+			y.ratio=x.ratio;
+		}
+		x.nums+=y.nums;//然后直接相加
+		return x;
+	}
+	__BigFloat operator-(__BigFloat x,__BigFloat y){
+		if(x.ratio<y.ratio){//对齐
+			x.nums<<=y.ratio-x.ratio;
+			x.ratio=y.ratio;
+		}
+		else if(x.ratio>y.ratio){
+			y.nums<<=x.ratio-y.ratio;
+			y.ratio=x.ratio;
+		}
+		x.nums-=y.nums;
+		return x;
+	}
+	__BigFloat operator*(const __BigFloat& x,const __BigFloat& y){
+		return __BigFloat(x.nums*y.nums,x.ratio+y.ratio);
+	}
 }
 #endif
