@@ -2,6 +2,12 @@
 
 手写的大**整**数库，效率一般，需要 C++ 11 以上编译，使用时请确保 `BigInt.h`，`Types.h`，`FastFTransForm.h`，`Constant.h` 在同一文件夹。
 
+- `BigInt.h` 内即为大整数库
+- `Types.h` 内为类型别名和复数类。
+- `FastFTransForm.h` 内为 FFT（快速傅里叶变换）。
+- `Constant.h` 为常量（目前只有 $\pi$ 和它的 $2$ 倍，$6$ 倍。）
+- 如果需要 IO 请引入 `iostream` 和 `iomanip` 并**置于 `BigInt.h` 之前**。
+
 大整数类名为 `ulllint`，意即 `unsigned long long long int`。
 
 `__BigFloat` 是为了除法而编写的，因此没有除法和 IO，也**不能保证用在其它场合时的正确性和稳定性**。 
