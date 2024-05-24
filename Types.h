@@ -2,30 +2,32 @@
 #define TYPES 1
 namespace Types{
 	using ulong=unsigned long int;
-	using fl=double;
-	using fll=long double;
 	using size_t=unsigned int;
 	using uint=unsigned int;
+	using u8int=unsigned char;
+	using u16int=unsigned short int;
 	using u32int=unsigned long int;
 	using u64int=unsigned long long int;
-	using _64int=signed long long int;
-	using _32int=signed long int;
-	using _16int=signed short int;
-	using _8int=signed char;
-	using u8int=unsigned char;
 	using uint8=unsigned char;
+	using uint16=unsigned short int;
 	using uint32=unsigned long int;
 	using uint64=unsigned long long int;
-	using int64=signed long long int;
-	using int32=signed long int;
-	using int16=signed short int;
+	using _8int=signed char;
+	using _16int=signed short int;
+	using _32int=signed long int;
+	using _64int=signed long long int;
 	using int8=signed char;
-	using flong=long double;
+	using int16=signed short int;
+	using int32=signed long int;
+	using int64=signed long long int;
 	using fshort=float;
-	using f128=long double;
-	using f80=long double;
-	using f64=double;
+	using fl=double;
+	using fll=long double;
+	using flong=long double;
 	using f32=float;
+	using f64=double;
+	using f80=long double;
+	using f128=long double;
 	class complex{
 		f64 a,b;
 	public:
