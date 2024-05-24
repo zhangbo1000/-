@@ -6,7 +6,6 @@
 namespace BigInt{
 	//unsigned long long long int
 	class ulllint;
-	class __BigFloat;
 	class ulllint{
 #ifdef _GLIBCXX_IOMANIP
 #ifdef _GLIBCXX_IOSTREAM
@@ -14,7 +13,6 @@ namespace BigInt{
 		friend std::ostream;
 #endif
 #endif
-		friend __BigFloat;
 		using ll=Types::_16int;
 		static constexpr Types::size_t len=4;
 		static constexpr ll base=10000;
@@ -53,6 +51,11 @@ namespace BigInt{
 		friend ulllint operator+(const ulllint&,const ulllint&);
 		friend ulllint operator-(const ulllint&,const ulllint&);
 		friend ulllint operator*(const ulllint&,const ulllint&);
+		friend ulllint operator*(const ulllint&,const Types::uint&);
+		friend ulllint operator*(const ulllint&,const Types::u8int&);
+		friend ulllint operator*(const ulllint&,const Types::u16int&);
+		friend ulllint operator*(const ulllint&,const Types::u32int&);
+		friend ulllint operator*(const ulllint&,const Types::size_t&);
 		friend ulllint operator/(const ulllint&,const ulllint&);
 		friend ulllint operator<<(const ulllint&,const Types::size_t&);
 #if __cplusplus >= 202002L	
@@ -168,6 +171,39 @@ namespace BigInt{
 		while(c.size()>1&&c[c.size()-1]==0)c.nums.pop_back();
 		return c;
 	}
+	ulllint operator*(const ulllint& x,const Types::u16int& y){
+		Types::u32int tmp=0;
+		ulllint ans(x);
+		for(Types::size_t i=0;i<x.size();i++){
+			tmp+=ans[i]*y;
+			ans[i]=tmp%ulllint::base;
+			tmp/=ulllint::base;
+		}
+		while(tmp)ans.nums.push_back(tmp%ulllint::base),tmp/=ulllint::base;
+		return ans;
+	}
+	ulllint operator*(const ulllint& x,const Types::u8int& y){
+		Types::u32int tmp=0;
+		ulllint ans(x);
+		for(Types::size_t i=0;i<x.size();i++){
+			tmp+=ans[i]*y;
+			ans[i]=tmp%ulllint::base;
+			tmp/=ulllint::base;
+		}
+		while(tmp)ans.nums.push_back(tmp%ulllint::base),tmp/=ulllint::base;
+		return ans;
+	}
+	ulllint operator*(const ulllint& x,const Types::u32int& y){
+		Types::u64int tmp=0;
+		ulllint ans(x);
+		for(Types::size_t i=0;i<x.size();i++){
+			tmp+=ans[i]*y;
+			ans[i]=tmp%ulllint::base;
+			tmp/=ulllint::base;
+		}
+		while(tmp)ans.nums.push_back(tmp%ulllint::base),tmp/=ulllint::base;
+		return ans;
+	}
 	ulllint operator<<(const ulllint& x,const Types::size_t& y){
 		ulllint c(x);
 		c.nums.insert(c.begin(),y,0);
@@ -223,43 +259,5 @@ namespace BigInt{
 	bool operator==(const ulllint& x,const ulllint& y){return __comp(x,y)==0;}
 	bool operator!=(const ulllint& x,const ulllint& y){return __comp(x,y)!=0;}
 #endif
-	class __BigFloat{
-		ulllint nums;//数字
-		Types::size_t ratio;//小数点在从低到高第几位
-		__BigFloat(const __BigFloat& x):nums(x.nums),ratio(x.ratio){}
-		__BigFloat(const ulllint& x):nums(x),ratio(0){}
-		__BigFloat(const ulllint& x,const Types::size_t y):nums(x),ratio(y){}
-		__BigFloat(){}
-		friend __BigFloat operator+(__BigFloat,__BigFloat);
-		friend __BigFloat operator-(__BigFloat,__BigFloat);
-		friend __BigFloat operator*(const __BigFloat&,const __BigFloat&);
-	};
-	__BigFloat operator+(__BigFloat x,__BigFloat y){
-		if(x.ratio<y.ratio){//对齐
-			x.nums<<=y.ratio-x.ratio;
-			x.ratio=y.ratio;
-		}
-		else if(x.ratio>y.ratio){
-			y.nums<<=x.ratio-y.ratio;
-			y.ratio=x.ratio;
-		}
-		x.nums+=y.nums;//然后直接相加
-		return x;
-	}
-	__BigFloat operator-(__BigFloat x,__BigFloat y){
-		if(x.ratio<y.ratio){//对齐
-			x.nums<<=y.ratio-x.ratio;
-			x.ratio=y.ratio;
-		}
-		else if(x.ratio>y.ratio){
-			y.nums<<=x.ratio-y.ratio;
-			y.ratio=x.ratio;
-		}
-		x.nums-=y.nums;
-		return x;
-	}
-	__BigFloat operator*(const __BigFloat& x,const __BigFloat& y){
-		return __BigFloat(x.nums*y.nums,x.ratio+y.ratio);
-	}
 }
 #endif
