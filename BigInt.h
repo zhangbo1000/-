@@ -104,14 +104,15 @@ namespace BigInt{
 #ifdef _GLIBCXX_IOSTREAM
 	std::istream& operator>>(std::istream& cin,ulllint& x){
 		std::cin>>temp;
-		const Types::size_t l=strlen(temp);
-		Types::size_t j=-1,w=1;
-		x.nums=std::vector<ulllint::ll>(l/ulllint::len+2,0);
-		for(Types::size_t i=0;i<l;i++){
-			if(!(i%ulllint::len))j++,w=1;
-			x[j]+=(temp[l-i-1]^'0')*w;
-			w*=10;
+		const size_t l=strlen(temp);
+		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1,0);
+		auto it=x.nums.begin();
+		char *p=temp+l-1;
+		char *const ed=temp+3;
+		for(;p>=ed;p-=4){
+			*it++=(*p)+(*(p-1))*10+(*(p-2))*100+(*(p-3))*1000-53328;
 		}
+		if(p>=temp)*it++=std::stoi(std::string(temp,p+1));
 		while(x.size()>1&&x[x.size()-1]==0)x.nums.pop_back();
 		return cin;
 	}
