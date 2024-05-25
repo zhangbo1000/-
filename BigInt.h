@@ -248,7 +248,7 @@ namespace BigInt{
 	Types::_8int __comp(const ulllint& x,const ulllint& y){
 		if(x.size()<y.size())return -1;
 		if(x.size()>y.size())return 1;
-		for(int i=x.size()-1;i>=0;i--){
+		for(Types::_32int i=x.size()-1;i>=0;i--){
 			if(x[i]!=y[i])return x[i]-y[i];
 		}
 		return 0;
