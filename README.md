@@ -5,7 +5,7 @@
 - `BigInt.h` 内即为大整数库
 - `Types.h` 内为类型别名和复数类。
 - `FastFTransForm.h` 内为 FFT（快速傅里叶变换）。
-- `Constant.h` 为常量（目前只有 $\pi$ 和它的 $2$ 倍， $6$ 倍。）
+- `Constant.h` 为常量（目前只有 $\pi$ 和它的 $2$ 倍，$6$ 倍。）
 - 如果需要 IO 请引入 `iostream` 和 `iomanip` 并**置于 `BigInt.h` 之前**。
 
 大整数类名为 `ulllint`，意即 `unsigned long long long int`。
