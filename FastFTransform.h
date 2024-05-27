@@ -14,7 +14,8 @@ namespace FFT{
 		for(Types::size_t i=0;i<quarter;i++){
 			if(!(i&2047))w=Types::complex(cos(Constant::pi2*i/n),sin(Constant::pi2*i/n)),w3=w*w*w;
 			const Types::complex tmp1=a[i],tmp2=a[i+quarter],tmp3=a[i+half],tmp4=a[i+half+quarter];
-			Types::complex x=tmp1-tmp3,y=tmp2-tmp4;
+			const Types::complex x=tmp1-tmp3;
+			Types::complex y=tmp2-tmp4;
 			y=Types::complex(y.imag(),-y.real());
 			a[i]+=tmp3;
 			a[i+quarter]+=tmp4;
@@ -59,7 +60,7 @@ namespace FFT{
 			case 1<<18:dif<1<<18>(a);break;
 			case 1<<19:dif<1<<19>(a);break;
 			case 1<<20:dif<1<<20>(a);break;
-			case 1<<21:dif<1<<21>(a);break;
+			throw("Cannot support FFT for such a long sequence.");
 		}
 	}
 	template<const Types::size_t n>
@@ -74,7 +75,8 @@ namespace FFT{
 			if(!(i&2047))w=Types::complex(cos(Constant::pi2*i/n),-sin(Constant::pi2*i/n)),w3=w*w*w;
 			const Types::complex tmp1=w*a[i+half],tmp2=w3*a[i+half+quarter];
 			const Types::complex x=a[i],y=tmp1+tmp2;
-			Types::complex x1=a[i+quarter],y1=tmp1-tmp2;
+			const Types::complex x1=a[i+quarter];
+			Types::complex y1=tmp1-tmp2;
 			y1=Types::complex(y1.imag(),-y1.real());
 			a[i]+=y;
 			a[i+quarter]+=y1;
@@ -94,7 +96,7 @@ namespace FFT{
 		a[0]+=y;
 		a[1]=x-y;
 	}
-	void rundit(Types::complex a[],const size_t& n){
+	void rundit(Types::complex a[],const Types::size_t& n){
 		switch (n) {
 			case 1<<1:dit<1<<1>(a);break;
 			case 1<<2:dit<1<<2>(a);break;
@@ -116,6 +118,7 @@ namespace FFT{
 			case 1<<18:dit<1<<18>(a);break;
 			case 1<<19:dit<1<<19>(a);break;
 			case 1<<20:dit<1<<20>(a);break;
+			throw("Cannot support FFT for such a long sequence.");
 		}
 	}
 }
