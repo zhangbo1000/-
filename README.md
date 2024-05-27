@@ -30,7 +30,7 @@ Handwritten big **integer** number library, average efficiency, requires C++ 11+
 - `Types.h` contains type aliases and complex numbers class.
 - `FastFTransForm.h` contains the FFT (Fast Fourier Transform).
 - `Constant.h` for constants, and some common functions (currently only $\pi$ and its $2,6$ multiples, `max`, `min`.)
-- If IO is needed, include `iostream` and `iomanip` and **precede `BigInt.h` **.
+- If IO is needed, include `iostream` and `iomanip` and **precede `BigInt.h`**.
 
 The big integer class is called `ulllint`, meaning `unsigned long long long int`.
 
