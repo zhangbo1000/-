@@ -58,7 +58,11 @@ namespace BigInt{
 		friend ulllint operator*(const ulllint&,const Types::size_t&);
 		friend ulllint operator/(const ulllint&,const ulllint&);
 		friend ulllint operator<<(const ulllint&,const Types::size_t&);
-#if __cplusplus >= 202002L	
+#if __cplusplus >= 202002L
+		/*
+		我相信编译器能做出比我更好的优化
+		因此在支持的情况下，直接重载三路比较运算符
+		*/
 		friend auto operator<=>(const ulllint&,const ulllint&);
 #else 
 		friend Types::_8int __comp(const ulllint&,const ulllint&);
@@ -66,6 +70,10 @@ namespace BigInt{
 		friend bool operator>(const ulllint&,const ulllint&);
 		friend bool operator<=(const ulllint&,const ulllint&);
 		friend bool operator>=(const ulllint&,const ulllint&);
+		/*
+		C++ 20 之后，如果重载了 == 而未重载 !=
+		则会将 a!=b 视为 !(a==b)，不需要单独重载
+		*/
 		friend bool operator!=(const ulllint&,const ulllint&);
 #endif
 		friend bool operator==(const ulllint&,const ulllint&);
@@ -105,14 +113,15 @@ namespace BigInt{
 	std::istream& operator>>(std::istream& cin,ulllint& x){
 		std::cin>>temp;
 		const size_t l=strlen(temp);
-		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1,0);
-		auto it=x.nums.begin();
+		size_t j=0;
+		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1);
 		char *p=temp+l-1;
 		char *const ed=temp+3;
 		for(;p>=ed;p-=4){
-			*it++=(*p)+(*(p-1))*10+(*(p-2))*100+(*(p-3))*1000-53328;
+			x[j]=(*p)+(*(p-1))*10+(*(p-2))*100+(*(p-3))*1000-53328;
+			j++;
 		}
-		if(p>=temp)*it++=std::stoi(std::string(temp,p+1));
+		if(p>=temp)x[j]=std::stoi(std::string(temp,p+1));
 		while(x.size()>1&&x[x.size()-1]==0)x.nums.pop_back();
 		return cin;
 	}
@@ -129,7 +138,7 @@ namespace BigInt{
 	ulllint operator+(const ulllint& x,const ulllint& y){
 		if(x.size()==0)return y;
 		if(y.size()==0)return x;
-		ulllint c(std::max(x.size(),y.size())+1,0);
+		ulllint c(Constant::max(x.size(),y.size())+1,0);
 		for(Types::size_t i=0;i<x.size();i++)c[i]+=x[i];
 		for(Types::size_t i=0;i<y.size();i++)c[i]+=y[i];
 		for(Types::size_t i=0;i<c.size()-1;i++)c[i+1]+=c[i]/ulllint::base,c[i]%=ulllint::base;
@@ -155,7 +164,7 @@ namespace BigInt{
 		Types::size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
 		c.nums=std::vector<ulllint::ll>(s,0);
-		for(Types::size_t i=std::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
+		for(Types::size_t i=Constant::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
 		for(Types::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
 		for(Types::size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
 		FFT::rundif(tmp,s);
@@ -214,7 +223,7 @@ namespace BigInt{
 		static Types::complex tmp[ulllint::MAX_SIZE];
 		Types::size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
-		for(Types::size_t i=std::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
+		for(Types::size_t i=Constant::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
 		for(Types::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
 		for(Types::size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
 		FFT::rundif(tmp,s);
@@ -248,7 +257,7 @@ namespace BigInt{
 	Types::_8int __comp(const ulllint& x,const ulllint& y){
 		if(x.size()<y.size())return -1;
 		if(x.size()>y.size())return 1;
-		for(Types::_32int i=x.size()-1;i>=0;i--){
+		for(int i=x.size()-1;i>=0;i--){
 			if(x[i]!=y[i])return x[i]-y[i];
 		}
 		return 0;
