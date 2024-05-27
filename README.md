@@ -1,5 +1,6 @@
 English is not my native language; please excuse typing errors.
 
+- update 2024.5.27：现支持使用 `cstdio` 进行 IO 了，制作了两个函数 `input(ulllint& x)` 和 `output(ulllint& x)` 进行基于 `scanf` 和 `printf` 的 IO。
 - update 2024.5.22：修复了一堆 bug，增加了比较大小（**C++ 20** 以上编译的实现方式和 C++ 20 以下略有不同），开始了除法的编写。
 
 手写的大**整**数库，效率一般，需要 C++ 11 以上编译，使用时请确保 `BigInt.h`，`Types.h`，`FastFTransForm.h`，`Constant.h` 在同一文件夹。
