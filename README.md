@@ -20,7 +20,7 @@ English is not my native language; please excuse typing errors.
 
 乘法使用 FFT 实现。
 
-All of the following sentences are from a website named [DeepL](https://www.deepl.com/en/translator)
+All of the following sentences are from a website named [DeepL](https://www.deepl.com/en/translator).
 
 - update 2024.5.22: Fixed a bunch of bugs, added comparing sizes (**C++ 20** compiled above is implemented slightly differently than C++ 20 below), and started writing division.
 
