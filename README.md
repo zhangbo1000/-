@@ -1,3 +1,5 @@
+English is not my native language; please excuse typing errors.
+
 - update 2024.5.22：修复了一堆 bug，增加了比较大小（**C++ 20** 以上编译的实现方式和 C++ 20 以下略有不同），开始了除法的编写。
 
 手写的大**整**数库，效率一般，需要 C++ 11 以上编译，使用时请确保 `BigInt.h`，`Types.h`，`FastFTransForm.h`，`Constant.h` 在同一文件夹。
@@ -16,4 +18,26 @@
 
 压 $4$ 位，最多（压前）存 $10^6$ 位数。
 
-乘法效率使用 FFT 实现。
+乘法使用 FFT 实现。
+
+All of the following sentences are from a website named [DeepL](https://www.deepl.com/en/translator)
+
+- update 2024.5.22: Fixed a bunch of bugs, added comparing sizes (**C++ 20** compiled above is implemented slightly differently than C++ 20 below), and started writing division.
+
+Handwritten big **integer** number library, average efficiency, requires C++ 11+ compilation, make sure `BigInt.h`, `Types.h`, `FastFTransForm.h`, `Constant.h` are in the same folder when using it.
+
+- `BigInt.h` contains the large integer library
+- `Types.h` contains type aliases and plural classes.
+- `FastFTransForm.h` contains the FFT (Fast Fourier Transform).
+- `Constant.h` for constants, and some common functions (currently only $\pi$ and its $2,6$ multiples, `max`, `min`.)
+- If IO is needed, introduce `iostream` and `iomanip` and **precede `BigInt.h` **.
+
+The big integer class is called `ulllint`, meaning `unsigned long long long int`.
+
+`__BigFloat` is written for division, so there is no division or IO, and **no guarantee of correctness or stability when used in other contexts**. 
+
+It is not intended to support bit shifting operations, if it did, a left shift of one bit would be a multiplication by $10^4$, a right shift would be the same.
+
+Suppressing $4$ bits will store up to $10^6$ bits (before suppression).
+
+Multiplication is implemented using FFT.
