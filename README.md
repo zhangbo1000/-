@@ -27,10 +27,10 @@ All of the following sentences are from a website named [DeepL](https://www.deep
 Handwritten big **integer** number library, average efficiency, requires C++ 11+ compilation, make sure `BigInt.h`, `Types.h`, `FastFTransForm.h`, `Constant.h` are in the same folder when using it.
 
 - `BigInt.h` contains the large integer library
-- `Types.h` contains type aliases and plural classes.
+- `Types.h` contains type aliases and complex numbers class.
 - `FastFTransForm.h` contains the FFT (Fast Fourier Transform).
 - `Constant.h` for constants, and some common functions (currently only $\pi$ and its $2,6$ multiples, `max`, `min`.)
-- If IO is needed, introduce `iostream` and `iomanip` and **precede `BigInt.h` **.
+- If IO is needed, include `iostream` and `iomanip` and **precede `BigInt.h` **.
 
 The big integer class is called `ulllint`, meaning `unsigned long long long int`.
 
