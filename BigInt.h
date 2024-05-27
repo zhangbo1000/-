@@ -1,6 +1,7 @@
 #ifndef BIGINT
 #define BIGINT 1
 #include<cstring>
+#include<string>
 #include<vector>
 #include"FastFTransform.h"
 namespace BigInt{
@@ -47,6 +48,10 @@ namespace BigInt{
 		friend std::istream& operator>>(std::istream& cin,ulllint& x);
 		friend std::ostream& operator<<(std::ostream& cout,const ulllint& x);
 #endif
+#endif
+#ifdef _GLIBCXX_CSTDIO
+		friend void input(ulllint& x);
+		friend void output(const ulllint& x);
 #endif
 		friend ulllint operator+(const ulllint&,const ulllint&);
 		friend ulllint operator-(const ulllint&,const ulllint&);
@@ -135,6 +140,29 @@ namespace BigInt{
 	}
 #endif
 #endif
+#ifdef _GLIBCXX_CSTDIO
+	void input(ulllint& x){
+		std::scanf("%s",temp);
+		const size_t l=strlen(temp);
+		size_t j=0;
+		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1);
+		char *p=temp+l-1;
+		char *const ed=temp+3;
+		for(;p>=ed;p-=4){
+			x[j]=(*p)+(*(p-1))*10+(*(p-2))*100+(*(p-3))*1000-53328;
+			j++;
+		}
+		if(p>=temp)x[j]=std::stoi(std::string(temp,p+1));
+		while(x.size()>1&&x[x.size()-1]==0)x.nums.pop_back();
+	}
+	void output(const ulllint& x){
+		if(x.size()==0)return;
+		printf("%d",x[x.size()-1]);
+		for(Types::_32int i=((Types::_32int)x.size())-2;i>=0;i--){
+			printf("%04d",x[i]);
+		}
+	}
+#endif
 	ulllint operator+(const ulllint& x,const ulllint& y){
 		if(x.size()==0)return y;
 		if(y.size()==0)return x;
@@ -192,6 +220,7 @@ namespace BigInt{
 		while(tmp)ans.nums.push_back(tmp%ulllint::base),tmp/=ulllint::base;
 		return ans;
 	}
+	ulllint operator*(const Types::u16int& x,const ulllint& y){return y*x;}
 	ulllint operator*(const ulllint& x,const Types::u8int& y){
 		Types::u32int tmp=0;
 		ulllint ans(x);
@@ -203,6 +232,7 @@ namespace BigInt{
 		while(tmp)ans.nums.push_back(tmp%ulllint::base),tmp/=ulllint::base;
 		return ans;
 	}
+	ulllint operator*(const Types::u8int& x,const ulllint& y){return y*x;}
 	ulllint operator*(const ulllint& x,const Types::u32int& y){
 		Types::u64int tmp=0;
 		ulllint ans(x);
@@ -214,6 +244,7 @@ namespace BigInt{
 		while(tmp)ans.nums.push_back(tmp%ulllint::base),tmp/=ulllint::base;
 		return ans;
 	}
+	ulllint operator*(const Types::u32int& x,const ulllint& y){return y*x;}
 	ulllint operator<<(const ulllint& x,const Types::size_t& y){
 		ulllint c(x);
 		c.nums.insert(c.begin(),y,0);
@@ -245,7 +276,7 @@ namespace BigInt{
 	auto operator<=>(const ulllint& x,const ulllint& y){
 		if(x.size()<y.size())return -1;
 		if(x.size()>y.size())return 1;
-		for(int i=x.size()-1;i>=0;i--){
+		for(Types::_32int i=x.size()-1;i>=0;i--){
 			if(x[i]!=y[i])return x[i]-y[i];
 		}
 		return 0;
@@ -257,7 +288,7 @@ namespace BigInt{
 	Types::_8int __comp(const ulllint& x,const ulllint& y){
 		if(x.size()<y.size())return -1;
 		if(x.size()>y.size())return 1;
-		for(int i=x.size()-1;i>=0;i--){
+		for(Types::_32int i=x.size()-1;i>=0;i--){
 			if(x[i]!=y[i])return x[i]-y[i];
 		}
 		return 0;
