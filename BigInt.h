@@ -25,7 +25,7 @@ namespace BigInt{
 		const ll& operator[](const Types::size_t& x)const{return nums[x];}
 		ulllint(const std::vector<ll>::const_iterator& first,const std::vector<ll>::const_iterator& last)
 		:nums(std::vector<ll>(first,last)){}// 用 vector 构造。
-		ulllint(const Types::_16int& x,const ll& y){
+		ulllint(const Types::_32int& x,const ll& y){
 			nums=std::vector<ll>(x,y);
 		}// 用多个相同数构造，不处理进位。
 		ulllint(const std::vector<ll>&x):nums(x){}
