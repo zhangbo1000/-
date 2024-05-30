@@ -38,6 +38,18 @@ namespace FFT{
 		a[0]+=y;
 		a[1]=x-y;
 	}
+	template<>
+	void dif<4>(Types::complex a[]){
+		const Types::complex tmp1=a[0],tmp2=a[1],tmp3=a[2],tmp4=a[3];
+		const Types::complex x=tmp1-tmp3;
+		Types::complex y=tmp2-tmp4;
+		y=Types::complex(y.imag(),-y.real());
+		a[0]+=tmp3;
+		a[1]+=tmp4;
+		a[2]=x-y;
+		a[3]=x+y;
+		dif<2>(a);
+	}
 	void rundif(Types::complex a[],const size_t& n){
 		switch (n) {
 			case 1<<1:dif<1<<1>(a);break;
@@ -71,7 +83,7 @@ namespace FFT{
 		dit<quarter>(a+half+quarter);
 		Types::complex w(1,0),w3(1,0);
 		const Types::complex wn(cos(Constant::pi2/n),-sin(Constant::pi2/n)),wn3(cos(Constant::pi6/n),-sin(Constant::pi6/n));
-		for(size_t i=0;i<quarter;i++){
+		for(Types::size_t i=0;i<quarter;i++){
 			if(!(i&2047))w=Types::complex(cos(Constant::pi2*i/n),-sin(Constant::pi2*i/n)),w3=w*w*w;
 			const Types::complex tmp1=w*a[i+half],tmp2=w3*a[i+half+quarter];
 			const Types::complex x=a[i],y=tmp1+tmp2;
@@ -95,6 +107,19 @@ namespace FFT{
 		const Types::complex x=a[0],y=a[1];
 		a[0]+=y;
 		a[1]=x-y;
+	}
+	template<>
+	void dit<4>(Types::complex a[]){
+		dit<2>(a);
+		const Types::complex tmp1=a[2],tmp2=a[3];
+		const Types::complex x=a[0],y=tmp1+tmp2;
+		const Types::complex x1=a[1];
+		Types::complex y1=tmp1-tmp2;
+		y1=Types::complex(y1.imag(),-y1.real());
+		a[0]+=y;
+		a[1]+=y1;
+		a[2]=x-y;
+		a[3]=x1-y1;
 	}
 	void rundit(Types::complex a[],const Types::size_t& n){
 		switch (n) {
