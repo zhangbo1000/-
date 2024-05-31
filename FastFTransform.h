@@ -5,6 +5,7 @@
 #include"Types.h"
 #include"Constant.h"
 namespace FFT{
+	constexpr Types::size_t MAX_FFT_LENGTH=1<<19;
 	//Fast Fourier Transform
 	template<const Types::size_t n>
 	void dif(Types::complex a[]){
