@@ -187,7 +187,7 @@ namespace BigInt{
 		return z;
 	}
 	ulllint operator*(const ulllint& x,const ulllint& y){
-		static Types::complex tmp[ulllint::MAX_SIZE];
+		static Types::complex tmp[FFT::MAX_FFT_LENGTH];
 		static ulllint c;
 		Types::size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
@@ -251,7 +251,7 @@ namespace BigInt{
 		return c;
 	}
 	ulllint operator*=(ulllint& x,const ulllint& y){
-		static Types::complex tmp[ulllint::MAX_SIZE];
+		static Types::complex tmp[FFT::MAX_FFT_LENGTH];
 		Types::size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
 		for(Types::size_t i=Constant::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
