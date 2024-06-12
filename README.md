@@ -1,4 +1,5 @@
 English is not my native language; please excuse typing errors.
+- update 2024.6.12：修复了一堆 bug，现在使用 FFT 不会警告了。
 - update 2024.5.30：特化了 $4$ 点 FFT，略微提升效率。
 - update 2024.5.27：现支持使用 `cstdio` 进行 IO 了，制作了两个函数 `input(ulllint& x)` 和 `output(ulllint& x)` 进行基于 `scanf` 和 `printf` 的 IO。
 - update 2024.5.22：修复了一堆 bug，增加了比较大小（**C++ 20** 以上编译的实现方式和 C++ 20 以下略有不同），开始了除法的编写。
