@@ -1,7 +1,6 @@
 #ifndef FASTFTRANSFORM
 #define FASTFTRANSFORM 1
 #include<cmath>
-#warning If GCC tells you "unused parameter 'a' [-Wunused-parameter]",it is NOT wrong.
 #include"Types.h"
 #include"Constant.h"
 namespace FFT{
@@ -30,10 +29,6 @@ namespace FFT{
 		dif<quarter>(a+half+quarter);
 	}
 	template<>
-	void dif<1>(Types::complex a[]){}
-	template<>
-	void dif<0>(Types::complex a[]){}
-	template<>
 	void dif<2>(Types::complex a[]){
 		const Types::complex x=a[0],y=a[1];
 		a[0]+=y;
@@ -53,7 +48,7 @@ namespace FFT{
 	}
 	void rundif(Types::complex a[],const size_t& n){
 		switch (n) {
-			case 1<<1:dif<1<<1>(a);break;
+			case 1<<1:break;
 			case 1<<2:dif<1<<2>(a);break;
 			case 1<<3:dif<1<<3>(a);break;
 			case 1<<4:dif<1<<4>(a);break;
@@ -72,7 +67,6 @@ namespace FFT{
 			case 1<<17:dif<1<<17>(a);break;
 			case 1<<18:dif<1<<18>(a);break;
 			case 1<<19:dif<1<<19>(a);break;
-			case 1<<20:dif<1<<20>(a);break;
 			throw("Cannot support FFT for such a long sequence.");
 		}
 	}
@@ -100,10 +94,6 @@ namespace FFT{
 		}
 	}
 	template<>
-	void dit<1>(Types::complex a[]){}
-	template<>
-	void dit<0>(Types::complex a[]){}
-	template<>
 	void dit<2>(Types::complex a[]){
 		const Types::complex x=a[0],y=a[1];
 		a[0]+=y;
@@ -124,7 +114,7 @@ namespace FFT{
 	}
 	void rundit(Types::complex a[],const Types::size_t& n){
 		switch (n) {
-			case 1<<1:dit<1<<1>(a);break;
+			case 1<<1:break;
 			case 1<<2:dit<1<<2>(a);break;
 			case 1<<3:dit<1<<3>(a);break;
 			case 1<<4:dit<1<<4>(a);break;
@@ -143,7 +133,6 @@ namespace FFT{
 			case 1<<17:dit<1<<17>(a);break;
 			case 1<<18:dit<1<<18>(a);break;
 			case 1<<19:dit<1<<19>(a);break;
-			case 1<<20:dit<1<<20>(a);break;
 			throw("Cannot support FFT for such a long sequence.");
 		}
 	}
