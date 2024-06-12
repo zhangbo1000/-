@@ -84,7 +84,7 @@ namespace BigInt{
 		friend bool operator==(const ulllint&,const ulllint&);
 		ulllint operator+=(const ulllint& x){
 			if(x.size()>size()){
-				nums.resize(x.size()+1);
+				nums.resize(x.size()+1,0);
 			}
 			for(Types::size_t i=0;i<size();i++){
 				nums[i]+=x[i];
@@ -96,7 +96,7 @@ namespace BigInt{
 		}
 		ulllint operator-=(const ulllint& x){
 			for(Types::size_t i=0;i<x.size();i++){
-				if(nums[i]<x[i]){
+				while(nums[i]<x[i]){
 					nums[i+1]--;
 					nums[i]+=base;
 				}
@@ -119,7 +119,7 @@ namespace BigInt{
 		std::cin>>temp;
 		const size_t l=strlen(temp);
 		size_t j=0;
-		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1);
+		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1,0);
 		char *p=temp+l-1;
 		char *const ed=temp+3;
 		for(;p>=ed;p-=4){
@@ -145,7 +145,7 @@ namespace BigInt{
 		std::scanf("%s",temp);
 		const size_t l=strlen(temp);
 		size_t j=0;
-		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1);
+		x.nums=std::vector<ulllint::ll>(l/ulllint::len+1,0);
 		char *p=temp+l-1;
 		char *const ed=temp+3;
 		for(;p>=ed;p-=4){
@@ -177,7 +177,7 @@ namespace BigInt{
 		if(y.size()==0)return x;
 		ulllint z(x);
 		for(Types::size_t i=0;i<y.size();i++){
-			if(z[i]<y[i]){
+			while(z[i]<y[i]){
 				z[i]+=ulllint::base;
 				z[i+1]--;
 			}
@@ -192,7 +192,7 @@ namespace BigInt{
 		Types::size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
 		c.nums=std::vector<ulllint::ll>(s,0);
-		for(Types::size_t i=Constant::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
+		for(Types::size_t i=Constant::min(x.size(),y.size());i<s;i++)tmp[i]=Types::complex(0,0);
 		for(Types::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
 		for(Types::size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
 		FFT::rundif(tmp,s);
@@ -254,13 +254,13 @@ namespace BigInt{
 		static Types::complex tmp[FFT::MAX_FFT_LENGTH];
 		Types::size_t n=x.size()+y.size()-1,s=1;
 		while(s<=n)s<<=1;
-		for(Types::size_t i=Constant::max(x.size(),y.size());i<s;i++)tmp[i]=0; 
+		for(Types::size_t i=Constant::min(x.size(),y.size());i<s;i++)tmp[i]=Types::complex(0,0);
 		for(Types::size_t i=0;i<x.size();i++)tmp[i].real(x[i]);
 		for(Types::size_t i=0;i<y.size();i++)tmp[i].imag(y[i]);
 		FFT::rundif(tmp,s);
 		for(Types::size_t i=0;i<s;i++)tmp[i]*=tmp[i];
 		FFT::rundit(tmp,s);
-		x.nums.resize(s);
+		x.nums=std::vector<ulllint::ll>(s,0);
 		const Types::_32int kkk=s;
 		const Types::f64 change=0.5/kkk;
 		Types::u64int _tmp=0;
