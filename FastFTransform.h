@@ -48,7 +48,7 @@ namespace FFT{
 	}
 	void rundif(Types::complex a[],const size_t& n){
 		switch (n) {
-			case 1<<1:break;
+			case 1<<1:dif<1<<1>(a);break;
 			case 1<<2:dif<1<<2>(a);break;
 			case 1<<3:dif<1<<3>(a);break;
 			case 1<<4:dif<1<<4>(a);break;
@@ -114,7 +114,7 @@ namespace FFT{
 	}
 	void rundit(Types::complex a[],const Types::size_t& n){
 		switch (n) {
-			case 1<<1:break;
+			case 1<<1:dit<1<<1>(a);break;
 			case 1<<2:dit<1<<2>(a);break;
 			case 1<<3:dit<1<<3>(a);break;
 			case 1<<4:dit<1<<4>(a);break;
